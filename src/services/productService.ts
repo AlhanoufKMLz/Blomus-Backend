@@ -20,13 +20,13 @@ export const findAllProducts = async (
   if (sortBy === 'newest') {
     sortQuery = { createdAt: -1 }
   } else if (sortBy === 'lowestPrice') {
-    sortQuery = { productPrice: 1 }
+    sortQuery = { price: 1 }
   } else if (sortBy === 'highestPrice') {
-    sortQuery = { productPrice: -1 }
+    sortQuery = { price: -1 }
   }
 
   const foundCategory = await Category.find({
-    categoryName: { $regex: `${category}`, $options: 'i' },
+    name: { $regex: `${category}`, $options: 'i' },
   })
 
   const products = await Product.find()
@@ -34,12 +34,12 @@ export const findAllProducts = async (
     .skip(skip)
     .limit(limit)
     .sort(sortQuery)
-    .find(findBySearchQuery(searchText, 'productName'))
-    .find(findBySearchQuery(searchText, 'productDescription'))
-    .find(category ? { category: { $in: foundCategory } } : {})
+    .find(findBySearchQuery(searchText, 'name'))
+    .find(findBySearchQuery(searchText, 'description'))
+    .find(category ? { categor: { $in: foundCategory } } : {})
 
   if (products.length == 0) {
-    throw ApiError.notFound('There are no orders')
+    throw ApiError.notFound('There are no products')
   }
 
   return { products, totalPages, currentPage }
@@ -76,11 +76,11 @@ export const removeProduct = async (productId: string) => {
 export const updateProduct = async (
   productId: string,
   updatedProduct: ProductDocument,
-  productImage: string | undefined
+  image: string | undefined
 ) => {
   const product = await Product.findByIdAndUpdate(
     productId,
-    { ...updatedProduct, productImage: productImage },
+    { ...updatedProduct, image: image },
     { new: true }
   )
   if (!product) {
@@ -92,7 +92,8 @@ export const updateProduct = async (
 
 //** Service:- Create a Product */
 export const createNewProduct = async (newProduct: ProductDocument) => {
-  const product = await Product.create(newProduct)
+  const product = new Product(newProduct)
+  product.save()
 
   return product
 }

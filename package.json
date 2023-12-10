@@ -15,6 +15,7 @@
     "@types/multer": "^1.4.11",
     "@types/nodemailer": "^6.4.14",
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "dependencies": "^0.0.1",
     "express": "^4.17.3",
     "express-async-handler": "^1.2.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
     "dotenv": "^16.0.2"
   }
 }

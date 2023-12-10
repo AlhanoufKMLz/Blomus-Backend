@@ -40,8 +40,8 @@ export const calculateTotalPrice = async (
   const total = await Promise.all(
     cart.products.map(async (product) => {
       const productFound = await Product.findById(product.product)
-      const productPrice = productFound?.productPrice || 0
-      return productPrice * product.quantity
+      const price = productFound?.price || 0
+      return price * product.quantity
     })
   )
   let totalPrice = total.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
