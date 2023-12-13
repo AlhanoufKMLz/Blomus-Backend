@@ -39,8 +39,10 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     const isSent = await sendActivationEmail(email, activationLink)
     isSent && (await createUser(newUser))
 
+    const userWithoutPass = await User.findOne({email}).select('-password')
     res.status(201).json({
       message: 'Registration successful. Check your email to activate your account',
+      user: userWithoutPass
     })
   } catch (error) {
     next(error)
@@ -101,7 +103,9 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         expiresIn: '24h',
       }
     )
-    res.status(200).json({ message: 'Login successful', token, user: user})
+
+    const userWithoutPass = await User.findOne({email}).select('-password')
+    res.status(200).json({ message: 'Login successful', token, user: userWithoutPass})
   } catch (error) {
     next(error)
   }
