@@ -25,24 +25,34 @@ export const findAllProducts = async (
     sortQuery = { price: -1 }
   }
 
-  const foundCategory = await Category.find({
+  const foundCategory = await Category.findOne({
     name: { $regex: `${category}`, $options: 'i' },
   })
+  if (!foundCategory) {
+    throw ApiError.notFound('There are no category')
+  }
 
   const products = await Product.find()
     .populate('reviews')
-    .skip(skip)
-    .limit(limit)
     .sort(sortQuery)
     .find(findBySearchQuery(searchText, 'name'))
     .find(findBySearchQuery(searchText, 'description'))
-    .find(category ? { categor: { $in: foundCategory } } : {})
+    .find(foundCategory ? { categories: { $in: foundCategory._id } } : {})
+    .skip(skip)
+    .limit(limit)
 
   if (products.length == 0) {
     throw ApiError.notFound('There are no products')
   }
 
   return { products, totalPages, currentPage }
+}
+
+//** Service:- Find Products count */
+export const productsCount = async () => {
+  let usersCount = await Product.countDocuments()
+
+  return usersCount
 }
 
 //** Service:- Find Single Product */
@@ -93,9 +103,8 @@ export const updateProduct = async (
 //** Service:- Create a Product */
 export const createNewProduct = async (newProduct: ProductDocument) => {
   const product = new Product(newProduct)
-  product.save()
 
-  return product
+  return product.save()
 }
 
 //** Service:- Check Stcok */

@@ -7,6 +7,7 @@ import {
   createNewProduct,
   findProduct,
   findHighestSoldProducts,
+  productsCount,
 } from '../services/productService'
 import { Product } from '../models/productModel'
 import ApiError from '../errors/ApiError'
@@ -40,6 +41,21 @@ export const getAllProducts = async (req: Request, res: Response, next: NextFunc
     next(error)
   }
 }
+
+/** -----------------------------------------------
+ * @desc Get Products Count
+ * @route /api/products/count
+ * @method GET
+ * @access public
+  -----------------------------------------------*/
+  export const getProductsCount = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const usersCount = await productsCount()
+      res.status(200).json({ meassge: 'Users Count', usersCount })
+    } catch (error) {
+      next(error)
+    }
+  }
 
 /**-----------------------------------------------
  * @desc Get Product By ID

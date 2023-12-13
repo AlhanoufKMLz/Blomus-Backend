@@ -59,7 +59,6 @@ export const createNewCategory = async (newCategory: CategoryDocument) => {
     throw ApiError.alreadyExist(`Category already exists with this ${name}`)
   }
   const category = new Category(newCategory)
-  category.save()
 
-  return category
+  return category.save()
 }

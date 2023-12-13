@@ -88,7 +88,7 @@ export const updateCategoryById = async (req: Request, res: Response, next: Next
 export const deleteCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const category = await removeCategory(req.params.categoryId)
-    res.status(200).json({ meassge: 'Category has been deleted Successfully', result: category })
+    res.status(200).json({ meassge: 'Category has been deleted Successfully', payload: category })
   } catch (error) {
     next(error)
   }

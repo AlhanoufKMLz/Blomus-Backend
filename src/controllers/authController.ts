@@ -101,7 +101,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         expiresIn: '24h',
       }
     )
-    res.status(200).json({ message: 'Login successful', token })
+    res.status(200).json({ message: 'Login successful', token, user: user})
   } catch (error) {
     next(error)
   }
