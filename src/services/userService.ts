@@ -47,7 +47,7 @@ export const updateUser = async (
   updatedUser: UserDocument,
   avatar?: Express.Multer.File
 ) => {
-  let user = await User.findByIdAndUpdate(userId, updatedUser, { new: true })
+  const user = await User.findByIdAndUpdate(userId, updatedUser, { new: true })
   if (!user) {
     throw ApiError.notFound(`User not found with ID: ${userId}`)
   }
@@ -59,9 +59,20 @@ export const updateUser = async (
   return await user.save()
 }
 
+//** Service:- Switch User Role */
+export const switchRole = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw ApiError.notFound(`User not found with ID: ${userId}`)
+  }
+
+  user.role = user.role === 'ADMIN' ? 'USER' : 'ADMIN';
+  return await user.save()
+}
+
 //** Service:- Count Users */
 export const userCount = async () => {
-  let usersCount = await User.countDocuments()
+  const usersCount = await User.countDocuments()
 
   return usersCount
 }

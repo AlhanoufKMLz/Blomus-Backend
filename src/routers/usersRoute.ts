@@ -6,6 +6,7 @@ import {
   getAllUsers,
   getUserById,
   getUsersCount,
+  switchUserRole,
   updateUserById,
 } from '../controllers/userController'
 import { uploadavatar } from '../middlewares/uploadImage'
@@ -32,6 +33,14 @@ router.put(
   validateObjectId('userId'),
   checkOwnership,
   updateUserById
+)
+// Switch user role
+router.put(
+  '/:userId/switch-role',
+  checkAuth,
+  checkRole('ADMIN'),
+  validateObjectId('userId'),
+  switchUserRole
 )
 
 // Block user by id route

@@ -5,6 +5,7 @@ import {
   findAUser,
   findAllUser,
   removeUser,
+  switchRole,
   updateUser,
   userCount,
 } from '../services/userService'
@@ -62,6 +63,25 @@ export const updateUserById = async (req: Request, res: Response, next: NextFunc
     next(error)
   }
 }
+
+/** -----------------------------------------------
+ * @desc Switch user role
+ * @route /api/users/:userId
+ * @method PUT
+ * @access private (User himself Only)
+  -----------------------------------------------*/
+  export const switchUserRole = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await switchRole(req.params.userId)
+      res.status(200).json({
+        message: 'User role swiched successfully',
+        payload: user,
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+  
 
 /** -----------------------------------------------
  * @desc Delete user by ID
