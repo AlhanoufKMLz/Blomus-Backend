@@ -9,7 +9,7 @@ import { findBySearchQuery } from '../utils/searchUtils'
 //** Service:- Find All Users */
 export const findAllUser = async (pageNumber = 1, limit = 8, searchText = '') => {
   const userCount = await User.countDocuments()
-  const { currentPage, skip, totalPages } = calculatePagination(userCount, pageNumber, limit)
+  const { skip, totalPages } = calculatePagination(userCount, pageNumber, limit)
 
   const users = await User.find()
     .skip(skip)
@@ -21,7 +21,7 @@ export const findAllUser = async (pageNumber = 1, limit = 8, searchText = '') =>
     throw ApiError.notFound('There are no users')
   }
 
-  return { users, totalPages, currentPage }
+  return { users, totalPages }
 }
 
 //** Service:- Find Single User */

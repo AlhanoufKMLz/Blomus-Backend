@@ -20,15 +20,13 @@ import ApiError from '../errors/ApiError'
  -----------------------------------------------*/
 export const getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let pageNumber = Number(req.query.pageNumber)
-    const limit = Number(req.query.limit)
+    const pageNumber = parseInt(req.query.pageNumber as string)
     const sortBy = req.query.sortBy?.toString()
     const searchText = req.query.searchText?.toString()
     const categories = req.query.categories?.toString()
 
-    const { products, totalPages, currentPage } = await findAllProducts(
+    const { products, totalPages } = await findAllProducts(
       pageNumber,
-      limit,
       sortBy,
       searchText,
       categories
@@ -36,7 +34,7 @@ export const getAllProducts = async (req: Request, res: Response, next: NextFunc
 
     res
       .status(200)
-      .json({ message: 'All products returned', payload: products, totalPages, currentPage })
+      .json({ message: 'All products returned', payload: products, totalPages })
   } catch (error) {
     next(error)
   }

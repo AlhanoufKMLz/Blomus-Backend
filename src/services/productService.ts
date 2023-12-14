@@ -8,13 +8,13 @@ import { findBySearchQuery } from '../utils/searchUtils'
 //** Service:- Find All Products */
 export const findAllProducts = async (
   pageNumber = 1,
-  limit = 8,
   sortBy = '',
   searchText = '',
   category = ''
 ) => {
+  const limit = 9
   const productCount = await Product.countDocuments()
-  const { currentPage, skip, totalPages } = calculatePagination(productCount, pageNumber, limit)
+  const { skip, totalPages } = calculatePagination(productCount, pageNumber, limit)
 
   let sortQuery = {}
   if (sortBy === 'newest') {
@@ -37,15 +37,16 @@ export const findAllProducts = async (
     .sort(sortQuery)
     .find(findBySearchQuery(searchText, 'name'))
     .find(findBySearchQuery(searchText, 'description'))
-    .find(foundCategory ? { categories: { $in: foundCategory._id } } : {})
+    .find(category ? { categories: { $in: foundCategory} } : {})
     .skip(skip)
     .limit(limit)
 
-  if (products.length == 0) {
+
+  if (products.length === 0) {
     throw ApiError.notFound('There are no products')
   }
 
-  return { products, totalPages, currentPage }
+  return { products, totalPages }
 }
 
 //** Service:- Find Products count */

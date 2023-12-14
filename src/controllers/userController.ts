@@ -22,10 +22,10 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
     let pageNumber = Number(req.query.pageNumber)
     const limit = Number(req.query.limit)
     const searchText = req.query.searchText?.toString()
-    const { users, totalPages, currentPage } = await findAllUser(pageNumber, limit, searchText)
+    const { users, totalPages } = await findAllUser(pageNumber, limit, searchText)
     res
       .status(200)
-      .json({ message: 'All users returned successfully', payload: users, totalPages, currentPage })
+      .json({ message: 'All users returned successfully', payload: users, totalPages })
   } catch (error) {
     next(error)
   }
