@@ -42,7 +42,6 @@ router.put(
   validateObjectId('userId'),
   switchUserRole
 )
-
 // Block user by id route
 router.put(
   '/:userId/block',
