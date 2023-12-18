@@ -7,7 +7,7 @@ import { findBySearchQuery } from '../utils/searchUtils'
 //** Service:- Find All Categories */
 export const findAllCategories = async (pageNumber = 1, limit = 8, searchText = '') => {
   const categoryCount = await Category.countDocuments()
-  const { currentPage, skip, totalPages } = calculatePagination(categoryCount, pageNumber, limit)
+  const { skip, totalPages } = calculatePagination(categoryCount, pageNumber, limit)
   const categories = await Category.find()
     .skip(skip)
     .limit(limit)
@@ -16,7 +16,7 @@ export const findAllCategories = async (pageNumber = 1, limit = 8, searchText = 
     throw ApiError.notFound('There are no categories')
   }
 
-  return { categories, totalPages, currentPage }
+  return { categories, totalPages }
 }
 
 //** Service:- Find a Category */

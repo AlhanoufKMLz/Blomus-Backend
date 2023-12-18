@@ -116,9 +116,9 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
       price: parsedProductPrice,
       image: req.file?.path,
       quantityInStock: parsedQuantityInStock,
-      categories,
+      categories: categories.split(','),
       discount,
-      sizes,
+      sizes: sizes.split(','),
     })
 
     const newProduct = await createNewProduct(product)
