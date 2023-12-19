@@ -14,7 +14,7 @@ export function validateOrder(req: Request, res: Response, next: NextFunction) {
       city: zod.string(),
       address: zod.string(),
     }),
-    orderStatus: zod.enum(['PENDING', 'PROCESSING', 'SHIPPED']).optional(),
+    orderStatus: zod.enum(['Pending', 'Processing', 'Shipped', 'Delivered', 'Returned', 'Canceled']).optional(),
   })
 
   try {

@@ -28,11 +28,11 @@ export const getAllOrders = async (req: Request, res: Response, next: NextFuncti
     const user = req.query.user?.toString()
     const status = req.query.status?.toString()
 
-    const { orders, totalPages, currentPage } = await findAllOrders(pageNumber, limit, user, status)
+    const { orders, totalPages } = await findAllOrders(pageNumber, limit, user, status)
 
     res
       .status(200)
-      .json({ message: 'All orders returned', payload: orders, totalPages, currentPage })
+      .json({ message: 'All orders returned', payload: orders, totalPages })
   } catch (error) {
     next(error)
   }

@@ -8,7 +8,7 @@ import { findBySearchQuery } from '../utils/searchUtils'
 //** Service:- Find All Orders */
 export const findAllOrders = async (pageNumber = 1, limit = 8, user = '', status = '') => {
   const orderCount = await Product.countDocuments()
-  const { currentPage, skip, totalPages } = calculatePagination(orderCount, pageNumber, limit)
+  const { skip, totalPages } = calculatePagination(orderCount, pageNumber, limit)
 
   const orders = await Order.find()
     .populate('products.product', 'name price')
@@ -21,7 +21,7 @@ export const findAllOrders = async (pageNumber = 1, limit = 8, user = '', status
     throw ApiError.notFound('There are no orders')
   }
 
-  return { orders, totalPages, currentPage }
+  return { orders, totalPages }
 }
 
 //** Service:- Find Single Order */
