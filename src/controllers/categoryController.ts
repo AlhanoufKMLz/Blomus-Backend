@@ -34,14 +34,14 @@ export const getAllCategory = async (req: Request, res: Response, next: NextFunc
     let pageNumber = Number(req.query.pageNumber)
     const limit = Number(req.query.limit)
     const searchText = req.query.searchText?.toString()
-    const { categories, totalPages, currentPage } = await findAllCategories(
+    const { categories, totalPages } = await findAllCategories(
       pageNumber,
       limit,
       searchText
     )
     res
       .status(200)
-      .json({ message: 'All products returned', payload: categories, totalPages, currentPage })
+      .json({ message: 'All products returned', payload: categories, totalPages })
   } catch (error) {
     next(error)
   }

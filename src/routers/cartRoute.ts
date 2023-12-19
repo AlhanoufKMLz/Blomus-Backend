@@ -2,7 +2,7 @@ import express from 'express'
 
 import {
   addToCart,
-  updateCartItems,
+  updateCartItemQuantity,
   getCartItems,
   deleteCartById,
   deleteCartItem,
@@ -17,8 +17,8 @@ router.get('/', checkAuth, getCartItems)
 
 router.post('/', checkAuth, validateCart, addToCart)
 
-router.put('/', checkAuth, updateCartItems)
-router.put('/:productId', validateObjectId('productId'), checkAuth, deleteCartItem)
+router.put('/update-quantity', checkAuth, updateCartItemQuantity)
+router.put('/', checkAuth, deleteCartItem)
 
 router.delete('/:cartId', validateObjectId('cartId'), deleteCartById)
 

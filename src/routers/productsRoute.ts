@@ -32,8 +32,8 @@ router.post(
   checkAuth,
   checkRole('ADMIN'),
   uploadImage.single('image'),
-  createProduct,
-  validateProduct
+  validateProduct,
+  createProduct
 )
 
 // Delete product bu id route

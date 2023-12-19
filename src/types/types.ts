@@ -28,6 +28,7 @@ export type ProductDocument = Document & {
 export type CategoryDocument = Document & {
   name: string
 }
+
 export type DiscountCodeDocument = Document & {
   code: string
   discountPercentage: number
@@ -67,12 +68,14 @@ export type CartDocument = Document & {
     quantity: number
   }[]
 }
+
 export type WishListDocument = Document & {
   user: string
   products: {
     product: mongoose.Schema.Types.ObjectId
   }[]
 }
+
 export type ReviewDocument = {
   userId: string
   products: {

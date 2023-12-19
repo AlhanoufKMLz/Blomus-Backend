@@ -35,7 +35,7 @@ export const addItem = async (
 //** Service:- Calculate Total Price */
 export const calculateTotalPrice = async (
   cart: CartDocument,
-  discountCode: DiscountCodeDocument
+  discountCode?: DiscountCodeDocument
 ) => {
   const total = await Promise.all(
     cart.products.map(async (product) => {
@@ -53,7 +53,7 @@ export const calculateTotalPrice = async (
     savedAmount = (totalPrice * isDiscountCodeFound.discountPercentage) / 100
     totalAfterDiscount = totalPrice - savedAmount
   } else {
-    throw ApiError.notFound(`Discount Code not found.`)
+    totalAfterDiscount = totalPrice
   }
 
   return { totalPrice, savedAmount, totalAfterDiscount }
@@ -65,28 +65,29 @@ export const findCart = async (userId: string) => {
   if (!cart) {
     throw ApiError.notFound(`Cart not found with userId: ${userId}`)
   }
-  return cart.products
+  return cart
 }
 
 //** Service:- Update cart items */
-export const updateCart = async (userId: string, cartItemId: string, quantity: number) => {
+export const updateQuantity = async (userId: string, cartItemId: string, updateType: string) => {
   const cart = await Cart.findOne({ user: userId })
   if (!cart) {
     throw ApiError.notFound(`Cart not found`)
   }
 
   const CartItemIndex = cart.products.findIndex(
-    (product) => product.product.toString() === cartItemId
+    (item) => item.product.toString() === cartItemId
   )
   if (CartItemIndex === -1) {
     throw ApiError.notFound('Product not found in the cart')
   }
 
-  cart.products[CartItemIndex].quantity = quantity
-  const updatedCart = await cart.save()
-  const itemsCount = updatedCart.products.reduce((count, product) => count + product.quantity, 0)
+  if (updateType === 'inc') cart.products[CartItemIndex].quantity++
+  else if (updateType === 'dec') cart.products[CartItemIndex].quantity--
 
-  return { cart: updatedCart, itemsCount }
+  const updatedCart = await cart.save()
+
+  return { item: cart.products[CartItemIndex] }
 }
 
 //** Service:- Delete item from cart */

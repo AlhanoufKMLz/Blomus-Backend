@@ -7,7 +7,7 @@ import {
   deleteCart,
   deleteItemFromCart,
   findCart,
-  updateCart,
+  updateQuantity,
 } from '../services/cartService'
 import { checkStock, findProduct } from '../services/productService'
 
@@ -52,13 +52,17 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
   try {
     const userId = req.decodedUser.userId
 
-    const cartItems = await findCart(userId)
-    const itemsCount = cartItems.reduce((count, product) => count + product.quantity, 0)
+    const cart = await findCart(userId)
+    const itemsCount = cart.products.reduce((count, product) => count + product.quantity, 0)
+    const { totalPrice, savedAmount, totalAfterDiscount } = await calculateTotalPrice(cart)
 
     res.status(200).json({
       message: 'All cart items returned',
-      cartItems: cartItems,
+      cartItems: cart.products,
       itemsCount: itemsCount,
+      totalPrice: totalPrice,
+      savedAmount: savedAmount,
+      totalAfterDiscount: totalAfterDiscount,
     })
   } catch (error) {
     next(error)
@@ -71,14 +75,14 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
  * @method PUT
  * @access private (user himself only)
   -----------------------------------------------*/
-export const updateCartItems = async (req: Request, res: Response, next: NextFunction) => {
+export const updateCartItemQuantity = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.decodedUser.userId
-    const { _id, quantity } = req.body
+    const { userId } = req.decodedUser
+    const { productId, updateType } = req.body
 
-    const { cart, itemsCount } = await updateCart(userId, _id, quantity)
+    const { item } = await updateQuantity(userId, productId, updateType)
 
-    res.status(200).json({ message: 'Cart item has been updated successfully', cart, itemsCount })
+    res.status(200).json({ message: 'Cart item has been updated successfully', item })
   } catch (error) {
     next(error)
   }
@@ -93,13 +97,12 @@ export const updateCartItems = async (req: Request, res: Response, next: NextFun
 export const deleteCartItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.decodedUser.userId
-    const productId = req.params.productId
-    console.log(productId)
-    const updatedCart = await deleteItemFromCart(userId, productId)
+    const { productId } = req.body
+    await deleteItemFromCart(userId, productId)
 
     res
       .status(200)
-      .json({ meassge: 'Product has been deleted from the cart successfully', result: updatedCart })
+      .json({ meassge: 'Product has been deleted from the cart successfully', result: productId })
   } catch (error) {
     next(error)
   }
