@@ -16,7 +16,7 @@ export const sendResetPasswordLink = async (req: Request, res: Response, next: N
   try {
     const { email } = req.body
     const user = await checkIfUserExistsByEmail(email)
-    if (!user) {
+    if (!user || !user.isAccountVerified) {
       throw ApiError.notFound('No user found with the provided email address')
     }
     const resetToken = generateActivationToken()

@@ -4,15 +4,15 @@ import bcrypt from 'bcrypt'
 
 //** Service:- Update Password  */
 export const updatePassword = async (resetPasswordToken: string, password: string) => {
-  console.log("🚀 ~ file: passwordService.ts:8 ~ updatePassword ~ password:", password)
   const hashedPassword = await bcrypt.hash(password, 10)
   const user = await User.findOne({ resetPasswordToken })
-  if (user) {
-    user.password = hashedPassword
-    user.resetPasswordToken = undefined
-
-    await user.save()
+  if (!user) {
+    throw ApiError.notFound('Invalid token')
   }
+  user.password = hashedPassword
+  user.resetPasswordToken = undefined
+
+  await user.save()
 }
 
 //** Service:- Reset Password  */
