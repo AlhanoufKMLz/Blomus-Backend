@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from 'express'
 import ApiError from '../errors/ApiError'
 import { generateActivationToken } from '../utils/sendEmailUtils'
 import { sendResetPasswordEmail } from '../helpers/emailHelpers'
-import { findAUser } from '../services/userService'
 import { updatePassword, checkResetPasswordToken } from '../services/passwordService'
 import { checkIfUserExistsByEmail } from '../services/authService'
 
@@ -24,9 +23,9 @@ export const sendResetPasswordLink = async (req: Request, res: Response, next: N
     user.resetPasswordToken = resetToken
 
     await user.save()
-    const resetLink = `http://localhost:5050/api/reset-password/${user._id}/${resetToken}`
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`
     await sendResetPasswordEmail(user.email, resetLink)
-    res.json({ message: 'Password reset link has been sent successfully' })
+    res.json({ message: "Password reset link has been sent to you're email successfully" })
   } catch (error) {
     next(error)
   }
@@ -56,14 +55,10 @@ export const getResetPasswordLink = async (req: Request, res: Response, next: Ne
  ------------------------------------------------*/
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { userId, token } = req.params
+    const { token } = req.params
     const { password } = req.body
-    const user = await findAUser(userId)
 
-    if (user.resetPasswordToken !== token) {
-      return next(ApiError.badRequest('Invalid token'))
-    }
-    await updatePassword(userId, password)
+    await updatePassword(token, password)
     res.status(200).json({
       message: 'Password has been reset successfully',
     })

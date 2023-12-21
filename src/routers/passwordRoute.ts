@@ -13,6 +13,6 @@ router.post('/', sendResetPasswordLink)
 
 router.get('/:userId/:token', validateObjectId('userId'), getResetPasswordLink)
 
-router.post('/:userId/:token', validateObjectId('userId'), resetPassword)
+router.post('/:token', resetPassword)
 
 export default router

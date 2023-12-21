@@ -18,11 +18,10 @@ import {
  -----------------------------------------------*/
 export const addDiscountCode = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { code, discountPercentage, discountAmount, expirationDate } = req.body
+    const { code, discountPercentage, expirationDate } = req.body
     const discountCode = new DiscountCode({
       code,
       discountPercentage,
-      discountAmount,
       expirationDate,
     })
     const newDiscountCode = await createNewDiscountCode(discountCode)

@@ -3,17 +3,16 @@ import { User } from '../models/userModel'
 import bcrypt from 'bcrypt'
 
 //** Service:- Update Password  */
-export const updatePassword = async (userId: string, password: string) => {
+export const updatePassword = async (resetPasswordToken: string, password: string) => {
+  console.log("🚀 ~ file: passwordService.ts:8 ~ updatePassword ~ password:", password)
   const hashedPassword = await bcrypt.hash(password, 10)
-  await User.updateOne(
-    { _id: userId },
-    {
-      $set: {
-        password: hashedPassword,
-        resetPasswordToken: undefined,
-      },
-    }
-  )
+  const user = await User.findOne({ resetPasswordToken })
+  if (user) {
+    user.password = hashedPassword
+    user.resetPasswordToken = undefined
+
+    await user.save()
+  }
 }
 
 //** Service:- Reset Password  */
