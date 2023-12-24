@@ -51,9 +51,9 @@ router.put(
   checkAuth,
   checkRole('ADMIN'),
   validateObjectId('productId'),
+  validateProduct,
   uploadImage.single('image'),
-  updateProductById,
-  validateProduct
+  updateProductById
 )
 
 export default router

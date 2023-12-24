@@ -44,7 +44,7 @@ export const deleteDiscountCode = async (req: Request, res: Response, next: Next
     const discounCode = await removeDiscountCode(req.params.discountCodeId)
     res
       .status(200)
-      .json({ message: 'Discount code has been deleted successfully', paylod: discounCode })
+      .json({ message: 'Discount code has been deleted successfully', payload: discounCode })
   } catch (error) {
     next(error)
   }

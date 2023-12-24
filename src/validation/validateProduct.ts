@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import zod, { ZodError } from 'zod'
 
 import ApiError from '../errors/ApiError'
+import mongoose from 'mongoose'
 
 export function validateProduct(req: Request, res: Response, next: NextFunction) {
   const isUpdated = req.method === 'PUT'
@@ -19,17 +20,17 @@ export function validateProduct(req: Request, res: Response, next: NextFunction)
           .max(100, { message: 'Product description must be 100 characters or less' }),
     image: zod.string().min(1, { message: 'Product image is required' }).optional(),
     quantityInStock: isUpdated
-      ? zod
-          .number()
-          .nonnegative({ message: 'Quantity in stock must be nonnegative number' })
-          .optional()
-      : zod.number().nonnegative({ message: 'Quantity in stock must be nonnegative number' }),
-    price: isUpdated
-      ? zod.number().nonnegative({ message: 'Product price must be nonnegative number' }).optional()
-      : zod.number().nonnegative({ message: 'Product price must be nonnegative number' }),
-    categories: isUpdated
-      ? zod.array(zod.string()).min(1, { message: 'Please enter at least one category' }).optional()
-      : zod.array(zod.string()).min(1, { message: 'Please enter at least one category' }),
+      ? zod.string().transform(Number).optional()
+      : zod.string().transform(Number),
+    price: isUpdated ? zod.string().transform(Number).optional() : zod.string().transform(Number),
+    // categories: isUpdated
+    //   ? zod
+    //       .string()
+    //       .transform((data) => data.split(',').map((id) => new mongoose.Types.ObjectId(id)))
+    //       .optional()
+    //   : zod
+    //       .string()
+    //       .transform((data) => data.split(',').map((id) => new mongoose.Types.ObjectId(id))),
   })
 
   try {

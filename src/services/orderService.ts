@@ -11,7 +11,7 @@ export const findAllOrders = async (pageNumber = 1, limit = 8, user = '', status
   const { skip, totalPages } = calculatePagination(orderCount, pageNumber, limit)
 
   const orders = await Order.find()
-    .populate('products.product', 'name price')
+    .populate('products.product').populate('user')
     .skip(skip)
     .limit(limit)
     .find(findBySearchQuery(user, 'user'))

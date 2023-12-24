@@ -32,9 +32,7 @@ export const getAllProducts = async (req: Request, res: Response, next: NextFunc
       categories
     )
 
-    res
-      .status(200)
-      .json({ message: 'All products returned', payload: products, totalPages })
+    res.status(200).json({ message: 'All products returned', payload: products, totalPages })
   } catch (error) {
     next(error)
   }
@@ -46,14 +44,14 @@ export const getAllProducts = async (req: Request, res: Response, next: NextFunc
  * @method GET
  * @access public
   -----------------------------------------------*/
-  export const getProductsCount = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const usersCount = await productsCount()
-      res.status(200).json({ meassge: 'Users Count', usersCount })
-    } catch (error) {
-      next(error)
-    }
+export const getProductsCount = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const usersCount = await productsCount()
+    res.status(200).json({ meassge: 'Users Count', usersCount })
+  } catch (error) {
+    next(error)
   }
+}
 
 /**-----------------------------------------------
  * @desc Get Product By ID
@@ -99,15 +97,7 @@ export const deleteProductById = async (req: Request, res: Response, next: NextF
  -----------------------------------------------*/
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      quantityInStock,
-      categories,
-      discount,
-      sizes,
-    } = req.body
+    const { name, description, price, quantityInStock, categories, discount, sizes } = req.body
     const parsedQuantityInStock = parseInt(quantityInStock)
     const parsedProductPrice = parseFloat(price)
     const product = new Product({
@@ -136,13 +126,14 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
  -----------------------------------------------*/
 export const updateProductById = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const image = req.file?.path
+    
     const updatedProduct = await updateProduct(
       req.params.productId,
-      {
-        ...req.body,
-      },
-      req.file?.path
-    )
+      req.body,
+      image
+      )
+
     res
       .status(200)
       .json({ message: 'Product has been updated successfully', payload: updatedProduct })
