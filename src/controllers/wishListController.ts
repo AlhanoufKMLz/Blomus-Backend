@@ -6,6 +6,7 @@ import {
   findWishList,
   removeFromWishList,
 } from '../services/wishListService'
+import { findProduct } from '../services/productService'
 
 /**-----------------------------------------------
  * @desc Add to wishlist  
@@ -16,8 +17,11 @@ export const addToWishList = async (req: Request, res: Response, next: NextFunct
   try {
     const { userId } = req.decodedUser
     const { productId } = req.body
+
     let wishlist = await createWishList(userId)
-    wishlist = await addItemToWishList(wishlist, productId)
+    const product = await findProduct(productId)
+    wishlist = await addItemToWishList(wishlist, product)
+
     res
       .status(200)
       .json({ message: 'Product has been added successfully to wishlist', payload: wishlist })
@@ -33,12 +37,14 @@ export const addToWishList = async (req: Request, res: Response, next: NextFunct
  -----------------------------------------------*/
 export const deleteFromWishList = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { wishListId } = req.params
+    const { productId } = req.body
     const { userId } = req.decodedUser
-    const wishlist = await removeFromWishList(wishListId, userId)
+
+    const product = await findProduct(productId)
+    const deletedProduct = await removeFromWishList(product, userId)
     res
       .status(200)
-      .json({ message: 'Product has been removed successfully from wishlist', payload: wishlist })
+      .json({ message: 'Product has been removed successfully from wishlist', payload: {deletedProduct} })
   } catch (error) {
     next(error)
   }

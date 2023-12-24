@@ -4,7 +4,7 @@ import { ProductDocument, WishListDocument } from '../types/types'
 
 //** Service:- Find a wishlist */
 export const findWishList = async (userId: string) => {
-  const wishlist = await WishList.findOne({ user: userId })
+  const wishlist = await WishList.findOne({ user: userId }).populate('products.product')
   if (!wishlist) {
     throw ApiError.notFound('Wishlist not found')
   }
@@ -13,7 +13,7 @@ export const findWishList = async (userId: string) => {
 
 //** Service:- Create a wishlist */
 export const createWishList = async (userId: string): Promise<WishListDocument> => {
-  let wishlist = await findWishList(userId)
+  let wishlist = await WishList.findOne({ user: userId })
   if (!wishlist) {
     wishlist = await WishList.create({ user: userId, products: [] })
   }
@@ -23,8 +23,8 @@ export const createWishList = async (userId: string): Promise<WishListDocument> 
 // ** Add Item to Wishlist */
 export const addItemToWishList = async (wishlist: WishListDocument, product: ProductDocument) => {
   const existingWishListItem = wishlist.products.find(
-    (p) => p.product.toString() === product._id.toString()
-  )
+    (p) => p.product === product._id
+    )
   if (!existingWishListItem) {
     wishlist.products.push({ product: product._id })
   }
@@ -32,17 +32,21 @@ export const addItemToWishList = async (wishlist: WishListDocument, product: Pro
 }
 
 //** Service:- Remove from wishlist */
-export const removeFromWishList = async (productId: string, userId: string) => {
+export const removeFromWishList = async (product: ProductDocument, userId: string) => {
   const wishlist = await WishList.findOne({ user: userId })
   if (!wishlist) {
     throw ApiError.notFound('Wishlist not found')
   }
-  const updatedProducts = wishlist.products.filter((item) => item.product.toString() !== productId)
 
-  if (updatedProducts.length === wishlist.products.length) {
-    throw ApiError.notFound('Product not found in wishlist')
+  const productFound = await WishList.findOneAndUpdate(
+    { user: userId },
+    { $pull: { products: { product: product._id } } },
+    { new: true }
+  )
+
+  if (!productFound) {
+    throw ApiError.notFound('Product not found in wishlist');
   }
 
-  wishlist.products = updatedProducts
-  return await wishlist.save()
+  return product
 }
