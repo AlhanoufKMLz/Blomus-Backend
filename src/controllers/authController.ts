@@ -35,7 +35,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       isBlocked: false,
     })
 
-    const activationLink = `http://localhost:5050/api/auth/activate/${activationToken}`
+    const activationLink = `https://sda-onsite-frontend-project-4h2x21nsr-alhanoufs-projects.vercel.app/auth/activate/${activationToken}`
     const isSent = await sendActivationEmail(email, activationLink)
     isSent && (await createUser(newUser))
 
