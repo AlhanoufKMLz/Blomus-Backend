@@ -25,19 +25,12 @@ export const findAllProducts = async (
     sortQuery = { price: -1 }
   }
 
-  const foundCategory = await Category.findOne({
-    name: { $regex: `${category}`, $options: 'i' },
-  })
-  if (!foundCategory) {
-    throw ApiError.notFound('There are no category')
-  }
-
   const products = await Product.find()
     .populate('reviews')
     .sort(sortQuery)
     .find(findBySearchQuery(searchText, 'name'))
     .find(findBySearchQuery(searchText, 'description'))
-    .find(category ? { categories: { $in: foundCategory} } : {})
+    .find(category ? { categories: { $in: category} } : {})
     .skip(skip)
     .limit(limit)
 
@@ -86,11 +79,13 @@ export const removeProduct = async (productId: string) => {
 export const updateProduct = async (
   productId: string,
   updatedProduct: ProductDocument,
+  categories: string,
+  sizes: string,
   image: string | undefined
 ) => {
   const product = await Product.findByIdAndUpdate(
     productId,
-    { ...updatedProduct, image: image },
+    { ...updatedProduct,categories: categories ,sizes: sizes image: image },
     { new: true }
   )
   if (!product) {

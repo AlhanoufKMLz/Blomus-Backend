@@ -13,6 +13,7 @@ import {
 import { validateObjectId } from '../middlewares/validateObjectId'
 import { checkAuth, checkRole } from '../middlewares/verifyToken'
 import { validateProduct } from '../validation/validateProduct'
+import uploadImageToS3 from '../middlewares/uploadImageToS3'
 
 const router = express.Router()
 
@@ -31,7 +32,7 @@ router.post(
   '/',
   checkAuth,
   checkRole('ADMIN'),
-  uploadImage.single('image'),
+  uploadImageToS3,
   validateProduct,
   createProduct
 )
@@ -51,8 +52,8 @@ router.put(
   checkAuth,
   checkRole('ADMIN'),
   validateObjectId('productId'),
+  uploadImageToS3,
   validateProduct,
-  uploadImage.single('image'),
   updateProductById
 )
 

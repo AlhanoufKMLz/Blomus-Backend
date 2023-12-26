@@ -32,33 +32,6 @@ export const addItem = async (
   return cart
 }
 
-//** Service:- Calculate Total Price */
-export const calculateTotalPrice = async (
-  cart: CartDocument,
-  discountCode?: DiscountCodeDocument
-) => {
-  const total = await Promise.all(
-    cart.products.map(async (product) => {
-      const productFound = await Product.findById(product.product)
-      const price = productFound?.price || 0
-      return price * product.quantity
-    })
-  )
-  let totalPrice = total.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-  let savedAmount = 0
-  let totalAfterDiscount = 0
-
-  const isDiscountCodeFound = await DiscountCode.findById(discountCode)
-  if (isDiscountCodeFound) {
-    savedAmount = (totalPrice * isDiscountCodeFound.discountPercentage) / 100
-    totalAfterDiscount = totalPrice - savedAmount
-  } else {
-    totalAfterDiscount = totalPrice
-  }
-
-  return { totalPrice, savedAmount, totalAfterDiscount }
-}
-
 //** Service:- Find User Cart */
 export const findCart = async (userId: string) => {
   const cart = await Cart.findOne({ user: userId }).populate('products.product')
@@ -75,17 +48,21 @@ export const updateQuantity = async (userId: string, cartItemId: string, updateT
     throw ApiError.notFound(`Cart not found`)
   }
 
-  const CartItemIndex = cart.products.findIndex(
-    (item) => item.product.toString() === cartItemId
-  )
+  const CartItemIndex = cart.products.findIndex((item) => item.product.toString() === cartItemId)
   if (CartItemIndex === -1) {
     throw ApiError.notFound('Product not found in the cart')
   }
 
-  if (updateType === 'inc') cart.products[CartItemIndex].quantity++
-  else if (updateType === 'dec') cart.products[CartItemIndex].quantity--
+  if (updateType === 'inc') {
+    cart.products[CartItemIndex].quantity++
+  } else if (updateType === 'dec') {
+    cart.products[CartItemIndex].quantity--
+  }
 
   const updatedCart = await cart.save()
+  if (updatedCart.products[CartItemIndex].quantity === 0) {
+    deleteItemFromCart(userId, cartItemId)
+  }
 
   return { item: cart.products[CartItemIndex] }
 }

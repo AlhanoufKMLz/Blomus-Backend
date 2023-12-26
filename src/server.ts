@@ -40,6 +40,7 @@ const corsOptions: CorsOptions = {
 app.use(myLogger)
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+//app.use(express.static('public'))
 app.use(cors({
   origin: 'http://localhost:3000'
 }))

@@ -92,10 +92,10 @@ export const getDiscountCodes = async (req: Request, res: Response, next: NextFu
  * @method GET
  * @access private (Admin Only)
  -----------------------------------------------*/
-export const getDiscountCodeById = async (req: Request, res: Response, next: NextFunction) => {
+export const getDiscountCodeByCode = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { discountCodeId } = req.params
-    const discountCode = await findDiscountCode(discountCodeId)
+    const { code } = req.params
+    const discountCode = await findDiscountCode(code)
     res
       .status(200)
       .json({ message: 'Discount code has been returned successfully', payload: discountCode })

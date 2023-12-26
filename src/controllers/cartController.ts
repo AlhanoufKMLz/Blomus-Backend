@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 
 import {
   addItem,
-  calculateTotalPrice,
   createCart,
   deleteCart,
   deleteItemFromCart,
@@ -30,12 +29,11 @@ export const addToCart = async (req: Request, res: Response, next: NextFunction)
 
     cart = await addItem(cart, quantity, product)
 
-    const totalPrice = await calculateTotalPrice(cart, discountCode)
+    //const totalPrice = await calculateTotalPrice(cart, discountCode)
 
     res.json({
       message: 'Product has been added to the cart successfully',
       cart,
-      Price: totalPrice,
     })
   } catch (error) {
     next(error)
@@ -54,15 +52,12 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
 
     const cart = await findCart(userId)
     const itemsCount = cart.products.reduce((count, product) => count + product.quantity, 0)
-    const { totalPrice, savedAmount, totalAfterDiscount } = await calculateTotalPrice(cart)
+    // const { totalPrice, savedAmount, totalAfterDiscount } = await calculateTotalPrice(cart)
 
     res.status(200).json({
       message: 'All cart items returned',
       cartItems: cart.products,
       itemsCount: itemsCount,
-      totalPrice: totalPrice,
-      savedAmount: savedAmount,
-      totalAfterDiscount: totalAfterDiscount,
     })
   } catch (error) {
     next(error)

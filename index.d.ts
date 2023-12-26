@@ -12,5 +12,6 @@ declare namespace Express {
       iat: number
       exp: number
     }
+    fileLocation: string
   }
 }

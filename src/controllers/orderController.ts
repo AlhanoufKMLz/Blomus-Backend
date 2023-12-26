@@ -14,6 +14,7 @@ import ApiError from '../errors/ApiError'
 import { Cart } from '../models/cartModel'
 import { sendOrderConfirmationEmail } from '../helpers/emailHelpers'
 import { checkStock, updateQuantityInStock } from '../services/productService'
+import { deleteCart } from '../services/cartService'
 
 /**-----------------------------------------------
  * @desc Get All Orders
@@ -74,6 +75,8 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     cart.products.map(async (product) => await updateQuantityInStock(product.product.toString(), product.quantity))
     //send confirmation email
     await sendOrderConfirmationEmail(req.decodedUser.email)
+    //delete cart
+    deleteCart(req.decodedUser.userId)
 
     res.status(201).json({ meassge: 'Order has been created successfuly', payload: order })
   } catch (error) {

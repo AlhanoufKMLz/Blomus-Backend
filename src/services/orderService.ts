@@ -4,6 +4,7 @@ import { Product } from '../models/productModel'
 import ApiError from '../errors/ApiError'
 import { calculatePagination } from '../utils/paginationUtils'
 import { findBySearchQuery } from '../utils/searchUtils'
+import { deleteCart } from './cartService'
 
 //** Service:- Find All Orders */
 export const findAllOrders = async (pageNumber = 1, limit = 8, user = '', status = '') => {
@@ -63,14 +64,14 @@ export const createNewOrder = async (
   
   for (const product of products) {
     const productId = product.product.toString()
-    await updateItemsSold(productId)
+    await updateItemsSold(productId, product.quantity)
   }
   return order
 }
 
 //** Service:- Update Number of Times a Product Sold */
-export const updateItemsSold = async (productId: string) => {
-  await Product.findByIdAndUpdate(productId, { $inc: { itemsSold: 1 } }, { new: true })
+export const updateItemsSold = async (productId: string, quantity: number) => {
+  await Product.findByIdAndUpdate(productId, { $inc: { itemsSold: quantity } }, { new: true })
 }
 
 //** Service:- Update Order Status */
@@ -79,7 +80,7 @@ export const changeOrderStatus = async (orderId: string, newStatus: string) => {
     orderId,
     { $set: { orderStatus: newStatus } },
     { new: true }
-  )
+  ).populate('user')
   if (!order) {
     throw ApiError.notFound(`Order not found with ID: ${orderId}`)
   }

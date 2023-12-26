@@ -12,8 +12,8 @@ export const findAllDiscountCodes = async () => {
 }
 
 //** Service:- Get a Discount Code  */
-export const findDiscountCode = async (discountCodeId: string) => {
-  const discounCode = await DiscountCode.findById(discountCodeId)
+export const findDiscountCode = async (discountCode: string) => {
+  const discounCode = await DiscountCode.findOne({code: discountCode})
   return discounCode
 }
 

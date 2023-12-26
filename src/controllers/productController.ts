@@ -23,13 +23,13 @@ export const getAllProducts = async (req: Request, res: Response, next: NextFunc
     const pageNumber = parseInt(req.query.pageNumber as string)
     const sortBy = req.query.sortBy?.toString()
     const searchText = req.query.searchText?.toString()
-    const categories = req.query.categories?.toString()
+    const category = req.query.category?.toString()
 
     const { products, totalPages } = await findAllProducts(
       pageNumber,
       sortBy,
       searchText,
-      categories
+      category
     )
 
     res.status(200).json({ message: 'All products returned', payload: products, totalPages })
@@ -104,10 +104,10 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
       name,
       description,
       price: parsedProductPrice,
-      image: req.file?.path,
+      image: req.fileLocation,
       quantityInStock: parsedQuantityInStock,
-      categories: categories.split(','),
       discount,
+      categories: categories.split(','),
       sizes: sizes.split(','),
     })
 
@@ -127,10 +127,14 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 export const updateProductById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const image = req.file?.path
-    
+    const categories = req.body.categories?.split(',')
+    const sizes = req.body.sizes?.split(',')
+
     const updatedProduct = await updateProduct(
       req.params.productId,
       req.body,
+      categories,
+      sizes,
       image
       )
 
