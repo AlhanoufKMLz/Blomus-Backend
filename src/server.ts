@@ -37,10 +37,12 @@ const corsOptions: CorsOptions = {
   }
 }
 
-app.use(myLogger)
+if( process.env.NODE_ENV === 'development'){
+  app.use(myLogger)
+}
+
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-//app.use(express.static('public'))
 app.use(cors({
   origin: 'http://localhost:3000'
 }))
@@ -63,3 +65,5 @@ databaseConnection()
 app.listen(PORT, () => {
   console.log('Server running http://localhost:' + PORT)
 })
+
+export default app
