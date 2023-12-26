@@ -23,7 +23,7 @@ export const sendResetPasswordLink = async (req: Request, res: Response, next: N
     user.resetPasswordToken = resetToken
 
     await user.save()
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`
+    const resetLink = `https://sda-onsite-frontend-project-4h2x21nsr-alhanoufs-projects.vercel.app/auth/activate/reset-password/${resetToken}`
     await sendResetPasswordEmail(user.email, resetLink)
     res.json({ message: "Password reset link has been sent to you're email successfully" })
   } catch (error) {
