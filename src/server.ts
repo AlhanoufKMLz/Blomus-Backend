@@ -20,32 +20,30 @@ config()
 const app = express()
 const PORT = 5050
 const enviroment = process.env.NODE_ENV || 'davalopment'
-const whitelist = [""]
+const whitelist = ['']
 
-if(enviroment === 'davalopment'){
+if (enviroment === 'davalopment') {
   whitelist.push('http://localhost:3000')
 }
 
 const corsOptions: CorsOptions = {
   origin: function (origin, callback) {
     const isOriginAllowed = origin && whitelist.indexOf(origin) !== -1
-    if(isOriginAllowed) {
+    if (isOriginAllowed) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
     }
-  }
+  },
 }
 
-if( process.env.NODE_ENV === 'development'){
+if (process.env.NODE_ENV === 'development') {
   app.use(myLogger)
 }
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(cors({
-  origin: 'http://localhost:3000'
-}))
+app.use(cors())
 
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
