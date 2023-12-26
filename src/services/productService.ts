@@ -85,7 +85,7 @@ export const updateProduct = async (
 ) => {
   const product = await Product.findByIdAndUpdate(
     productId,
-    { ...updatedProduct,categories: categories ,sizes: sizes image: image },
+    { ...updatedProduct,categories: categories ,sizes: sizes, image: image },
     { new: true }
   )
   if (!product) {
