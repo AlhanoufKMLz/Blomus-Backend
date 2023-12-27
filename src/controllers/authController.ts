@@ -35,7 +35,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       isBlocked: false,
     })
 
-    const activationLink = `https://sda-onsite-frontend-project-fawn.vercel.app/auth/activate/${activationToken}`
+    const activationLink = `https://blomus.vercel.app/auth/activate/${activationToken}`
     const isSent = await sendActivationEmail(email, activationLink)
     isSent && (await createUser(newUser))
 

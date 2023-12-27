@@ -23,8 +23,8 @@ export const sendResetPasswordLink = async (req: Request, res: Response, next: N
     user.resetPasswordToken = resetToken
 
     await user.save()
-    const resetLink = `https://sda-onsite-frontend-project-fawn.vercel.app/reset-password/${resetToken}`
-    await sendResetPasswordEmail(user.email, resetLink)
+    const resetLink = `https://blomus.vercel.app/reset-password/${resetToken}`
+    await sendResetPasswordEmail(user.email, user.firstName, resetLink)
     res.json({ message: "Password reset link has been sent to you're email successfully" })
   } catch (error) {
     next(error)
