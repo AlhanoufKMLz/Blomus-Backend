@@ -8,18 +8,18 @@ export const sendActivationEmail = async (email: string, activationLink: string)
     <p style="color: #727e7e; font-weight: bold;">
         Activate your account and discover the exciting features and benefits of Blomus.
     </p>
-    <a href="${activationLink}" style="background-color: #be9995; padding: 1rem; margin: 0.75rem; border-radius: 0.5rem; color: #f4f4f5; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <a href="${activationLink}" style="background-color: #be9995; padding: 10px 20px; border-radius: 5px; color: #f4f4f5; text-decoration: none; display: inline-block; margin: 15px 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         Activate Account
     </a>
-    <div style="display: flex; flex-direction: column; align-items: center;">
-        <p style="color: #727e7e;">
+    <div style="text-align: center; color: #727e7e; margin-top: 15px;">
+        <p>
             We're here to make your experience exceptional. If you have any questions or encounter
             issues during the activation process, please don't hesitate to contact our support team.
         </p>
-        <p style="color: #727e7e; font-weight: bold;">
+        <p style="font-weight: bold;">
             Thank you for choosing Blomus. We look forward to seeing you around!
         </p>
-        <p style="color: #727e7e;">Best regards,</p>
+        <p>Best regards,</p>
     </div>
 </div>
 `
@@ -59,37 +59,21 @@ export const sendResetPasswordEmail = async (
 export const sendOrderConfirmationEmail = async (email: string) => {
   const subject = 'Order Confirmation'
   const htmlTemplate = `
-  <body>
-  <div
-    style="
-      background-color: rgb(244 244 245);
-      padding: 1.75rem;
-      display: flex;
-      gap: 0.5rem;
-      flex-direction: column;
-      align-items: center;
-    "
-  >
-    <img
-      style="width: 7rem"
-      src="https://sda-ecommerce.s3.eu-north-1.amazonaws.com/1703646934655-logo.png"
-    />
-    <div style="display: flex; flex-direction: column; align-items: center">
-      <p style="color: #727e7e; font-weight: bold">
-        Hello, We're excited to confirm that your order with Blomus has been
-        successfully received.
-      </p>
-      <span style="color: #727e7e">
-        We are processing your order with care, and you will receive a confirmation email with
-        tracking information once your order ships.
-      </span>
-      <span style="color: #727e7e; font-weight: bold">
-        If you have any questions or concerns,, please contact us.
-      </span>
-      <span style="color: #727e7e">Best regards,</span>
+  <div style="background-color: #f4f4f5; padding: 1.75rem; text-align: center;">
+    <img style="width: 7rem;" src="https://sda-ecommerce.s3.eu-north-1.amazonaws.com/1703646934655-logo.png" alt="Blomus Logo" />
+    <div style="text-align: center; color: #727e7e; margin-top: 15px;">
+        <p style="font-weight: bold;">
+            Hello, We're excited to confirm that your order with Blomus has been successfully received.
+        </p>
+        <span>
+            We are processing your order with care, and you will receive a confirmation email with tracking information once your order ships.
+        </span>
+        <span style="font-weight: bold;">
+            If you have any questions or concerns, please contact us.
+        </span>
+        <span>Best regards,</span>
     </div>
-  </div>
-</body>
+</div>
       `
   return await sendEmail(email, subject, htmlTemplate)
 }
