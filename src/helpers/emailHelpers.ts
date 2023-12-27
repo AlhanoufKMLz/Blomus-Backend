@@ -62,7 +62,7 @@ export const sendOrderConfirmationEmail = async (email: string) => {
   <div style="background-color: #f4f4f5; padding: 1.75rem; text-align: center;">
     <img style="width: 7rem;" src="https://sda-ecommerce.s3.eu-north-1.amazonaws.com/1703646934655-logo.png" alt="Blomus Logo" />
     <div style="text-align: center; color: #727e7e; margin-top: 15px;">
-        <p style="font-weight: bold;">
+        <p style="font-weight: bold; color:be9995;">
             Hello, We're excited to confirm that your order with Blomus has been successfully received.
         </p>
         <span>
